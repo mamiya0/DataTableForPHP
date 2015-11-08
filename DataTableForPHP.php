@@ -661,6 +661,31 @@ class DataTableForPHP {
 		// 値を更新する
 		$this->setData($rowIndex, $columnName, $value);
 	}
+
+	// TODO
+	public function projection($column, $isArray = FALSE)
+	{
+	}
+
+	// TODO
+	public function filter($whereFunc, $isArray = FALSE)
+	{
+	}
+
+	// TODO
+	public function sort($orders, $isArray = FALSE)
+	{
+	}
+
+	// TODO
+	public function select($whereFunc, $orders, $isArray = FALSE)
+	{
+	}
+
+	// TODO
+	public function watchTable($return = FALSE)
+	{
+	}
 }
 
 // DataTableForPHP では長いので DTP で使えるように別名定義
