@@ -3,6 +3,7 @@
  * DataTableForPHP
  *
  * @author mamiya_shou
+ * @version 1.0.0
  */
 class DataTableForPHP {
 
@@ -31,14 +32,14 @@ class DataTableForPHP {
 	 *
 	 * @var boolean
 	 */
-	public static $isStrictMode = TRUE;
+	private static $isStrictMode = TRUE;
 
 	/**
 	 * エラーメッセージ配列
 	 *
 	 * @var array
 	 */
-	public static $errorMsgs = array(
+	private static $errorMsgs = array(
 		'column_not_exists'					=> 'カラム「%s」は存在しません。取得することができません。',
 		'column_exists_add'					=> 'カラム「%s」は既に存在します。追加することができません。',
 		'column_not_exists_delete'			=> 'カラム「%s」は存在しません。削除することができません。',
@@ -71,6 +72,7 @@ class DataTableForPHP {
 	 * テーブル名を取得する
 	 *
 	 * @return string テーブル名
+	 * @see [.NET] DataTable.TableName
 	 */
 	public function getTableName()
 	{
@@ -82,6 +84,7 @@ class DataTableForPHP {
 	 *
 	 * @param string $tableName テーブル名
 	 * @return void
+	 * @see [.NET] DataTable.TableName
 	 */
 	public function setTableName($tableName)
 	{
@@ -94,6 +97,7 @@ class DataTableForPHP {
 	 * @param array $datas
 	 * @return DataTableForPHP メソッドチェーンで使う用
 	 * @throws Exception
+	 * @see original
 	 */
 	public function setDBData(array $datas)
 	{
@@ -126,27 +130,26 @@ class DataTableForPHP {
 	}
 
 	/**
-	 * データテーブルを複製する
-	 * ※カラム構成のみでレコードは複製しない
+	 * データテーブルを複製する<br />
+	 * ※カラム構成のみでレコードは複製しない<br />
 	 * 　完全な複製が欲しい場合は、PHP の clone を使うこと
 	 *
-	 * @return DataTableForPHP
+	 * @return DataTableForPHPオブジェクト
+	 * @see [.NET] DataTable.Clone()
 	 */
 	public function cloneDataTable()
 	{
-		$tableName = $this->getTableName();
-		$columns = $this->getAllColumn();
-
-		$ret = new DataTableForPHP($tableName);
-		$ret->addColumn($columns);
+		$ret = new DataTableForPHP($this->_tableName);
+		$ret->addColumn($this->_columns);
 		return $ret;
 	}
 
 	/**
-	 * リソースの破棄
+	 * リソースの破棄<br />
 	 * (破棄後、再使用可能)
 	 *
 	 * @return void
+	 * @see [.NET] DataTable.Dispose()
 	 */
 	public function dispose()
 	{
@@ -160,6 +163,7 @@ class DataTableForPHP {
 	 *
 	 * @param boolean $mode 厳格モードか否か
 	 * @return void
+	 * @see original
 	 */
 	public static function setStrictMode($mode)
 	{
@@ -168,6 +172,9 @@ class DataTableForPHP {
 
 	/**
 	 * 厳格モードか否かを取得する
+	 *
+	 * @return boolean 厳格モードか否か
+	 * @see original
 	 */
 	public static function getStrictMode()
 	{
@@ -180,6 +187,7 @@ class DataTableForPHP {
 	 * カラムを取得する
 	 *
 	 * @return array カラム配列
+	 * @see [.NET] DataTable.Columns
 	 */
 	public function getAllColumn()
 	{
@@ -192,6 +200,7 @@ class DataTableForPHP {
 	 * @param int $index 指定位置
 	 * @return string カラム名
 	 * @throws Exception
+	 * @see [.NET] DataTable.Columns(index)
 	 */
 	public function getColumn($index)
 	{
@@ -208,8 +217,9 @@ class DataTableForPHP {
 	 * 指定したカラム名が存在するか否か
 	 *
 	 * @param string $column カラム名
+	 * @see [.NET] DataTable.Columns.Contains(column)
 	 */
-	public function containColumn($column)
+	public function containsColumn($column)
 	{
 		return in_array($column, $this->_columns);
 	}
@@ -218,6 +228,7 @@ class DataTableForPHP {
 	 * カラム数を返す
 	 *
 	 * @return int カラム数
+	 * @see [.NET] DataTable.Columns.Count()
 	 */
 	public function countColumn()
 	{
@@ -230,6 +241,8 @@ class DataTableForPHP {
 	 * @param string|array $column カラム名
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET]	DataTable.Columns.Add(column)<br />
+	 * 				DataTable.Columns.AddRange(column)
 	 */
 	public function addColumn($column)
 	{
@@ -280,6 +293,7 @@ class DataTableForPHP {
 	 * @param string $newColumnName 変更後のカラム名
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Columns(index).ColumnName
 	 */
 	public function changeColumn($oldColumnName, $newColumnName)
 	{
@@ -289,12 +303,12 @@ class DataTableForPHP {
 		}
 
 		// 古いカラム名が存在しない場合
-		if ($this->containColumn($oldColumnName) === FALSE) {
+		if ($this->containsColumn($oldColumnName) === FALSE) {
 			$message = sprintf(self::$errorMsgs['column_not_exists_change'], $oldColumnName);
 			throw new Exception($message);
 		}
 		// 新しいカラム名が存在する場合
-		if ($this->containColumn($newColumnName) === TRUE) {
+		if ($this->containsColumn($newColumnName) === TRUE) {
 			$message = sprintf(self::$errorMsgs['column_exists_change'], $newColumnName);
 			throw new Exception($message);
 		}
@@ -332,6 +346,7 @@ class DataTableForPHP {
 	 * @param string $column 削除するカラム名
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Columns().Remove(column)
 	 */
 	public function removeColumn($column)
 	{
@@ -360,6 +375,7 @@ class DataTableForPHP {
 	 * @param int $index 指定位置
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Columns.RemoveAt(index)
 	 */
 	public function removeAtColumn($index)
 	{
@@ -380,6 +396,7 @@ class DataTableForPHP {
 	 * カラムを消去する
 	 *
 	 * @return void
+	 * @see [.NET] DataTable.Columns.Clear()
 	 */
 	public function clearColumn()
 	{
@@ -440,6 +457,7 @@ class DataTableForPHP {
 	 * レコード配列を取得する
 	 *
 	 * @return array レコード配列
+	 * @see [.NET] DataTable.Rows
 	 */
 	public function getAllRow()
 	{
@@ -452,6 +470,7 @@ class DataTableForPHP {
 	 * @param int $index 指定位置
 	 * @return array レコード
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows(index)
 	 */
 	public function getRow($index)
 	{
@@ -467,6 +486,7 @@ class DataTableForPHP {
 	 * レコード数を返す
 	 *
 	 * @return int レコード数
+	 * @see [.NET] DataTable.Rows.Count()
 	 */
 	public function countRow()
 	{
@@ -477,6 +497,7 @@ class DataTableForPHP {
 	 * 値がNULLの追加用レコードを返す
 	 *
 	 * @return array 追加用レコード
+	 * @see [.NET] DataTable.NewRow()
 	 */
 	public function newRow()
 	{
@@ -493,6 +514,7 @@ class DataTableForPHP {
 	 * @param array $row 追加するレコード
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows.Add(row)
 	 */
 	public function addRow(array $row)
 	{
@@ -509,6 +531,7 @@ class DataTableForPHP {
 	 * @param int $index 挿入位置(>=0)
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows.InsertAt(row, index)
 	 */
 	public function insertAtRow(array $row, $index)
 	{
@@ -529,6 +552,7 @@ class DataTableForPHP {
 	 * @param array $row 更新するレコード
 	 * @param int $index 指定位置(>=0)
 	 * @return void
+	 * @see [.NET] DataTable.Rows(index)
 	 */
 	public function setRow(array $row, $index)
 	{
@@ -551,6 +575,7 @@ class DataTableForPHP {
 	 * @param boolean $isRenumbered 添字の振り直すか否か
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows(index).Remove()
 	 */
 	public function removeRow($index, $isRenumbered = TRUE)
 	{
@@ -572,6 +597,7 @@ class DataTableForPHP {
 	 * レコードを消去する
 	 *
 	 * @return void
+	 * @see [.NET] DataTable.Rows.Clear()
 	 */
 	public function clearRow()
 	{
@@ -587,6 +613,7 @@ class DataTableForPHP {
 	 * @param string $columnName カラム名
 	 * @return variant 値
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows(rowIndex)[columnName]
 	 */
 	public function getData($rowIndex, $columnName)
 	{
@@ -596,7 +623,7 @@ class DataTableForPHP {
 			throw new Exception($message);
 		}
 		// カラムが存在しない場合
-		if ($this->containColumn($columnName) === FALSE) {
+		if ($this->containsColumn($columnName) === FALSE) {
 			$message = sprintf(self::$errorMsgs['column_not_exists'], $columnName);
 			throw new Exception($message);
 		}
@@ -611,6 +638,7 @@ class DataTableForPHP {
 	 * @param int $columnIndex カラムの指定位置
 	 * @return variant 値
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows(rowIndex)[columnIndex]
 	 */
 	public function getDataForIndex($rowIndex, $columnIndex)
 	{
@@ -625,9 +653,10 @@ class DataTableForPHP {
 	 *
 	 * @param int $rowIndex 指定位置
 	 * @param string $columnName カラム名
-	 * @param variant 値
+	 * @param variant $value 値
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows(rowIndex)[columnIndex]
 	 */
 	public function setData($rowIndex, $columnName, $value)
 	{
@@ -637,7 +666,7 @@ class DataTableForPHP {
 			throw new Exception($message);
 		}
 		// カラムが存在しない場合
-		if ($this->containColumn($columnName) === FALSE) {
+		if ($this->containsColumn($columnName) === FALSE) {
 			$message = sprintf(self::$errorMsgs['column_not_exists_change'], $columnName);
 			throw new Exception($message);
 		}
@@ -650,9 +679,10 @@ class DataTableForPHP {
 	 *
 	 * @param int $rowIndex 指定位置
 	 * @param int $columnIndex カラムの指定位置
-	 * @param variant 値
+	 * @param variant $value 値
 	 * @return void
 	 * @throws Exception
+	 * @see [.NET] DataTable.Rows(rowIndex)[columnIndex]
 	 */
 	public function setDataForIndex($rowIndex, $columnIndex, $value)
 	{
@@ -662,28 +692,195 @@ class DataTableForPHP {
 		$this->setData($rowIndex, $columnName, $value);
 	}
 
-	// TODO
-	public function projection($column, $isArray = FALSE)
+	/**
+	 * 射影 - 特定のカラムを取得する
+	 *
+	 * @param string|array $columns カラム文字列 or カラム配列
+	 * @param boolean $isArray 配列で返すフラグ
+	 * @return array|DataTableForPHP 射影後の配列 or DataTableForPHPオブジェクト
+	 * @throws Exception
+	 * @see original
+	 */
+	public function projection($columns, $isArray = FALSE)
 	{
+		foreach ($this->_columns as $column) {
+			// カラム名が存在しない場合
+			if ($this->containsColumn($column) === FALSE) {
+				$message = sprintf(self::$errorMsgs['column_not_exists'], $column);
+				throw new Exception($message);
+			}
+		}
+
+		$columns = (array)$columns;
+		$rows = array();
+		// カラムが1つ、かつ配列で返す場合
+		if (count($columns) == 1 && $isArray === TRUE) {
+			$firstColumn = reset($columns);
+			foreach ($this->_rows as $row) {
+				$rows[] = $row[$column];
+			}
+		}
+		// それ以外の場合
+		else {
+			foreach ($columns as $column) {
+				foreach ($this->_rows as $index => $row) {
+					$rows[$index][$column] = $row[$column];
+				}
+			}
+		}
+
+		// 配列で返さない場合(通常)
+		if ($isArray === FALSE) {
+			$ret = new DataTableForPHP($this->_tableName);
+			$ret->setDBData($rows);
+		}
+		else {
+			$ret = $rows;
+		}
+
+		return $ret;
 	}
 
-	// TODO
+	/**
+	 * フィルタリング
+	 *
+	 * @param function $whereFunc 抽出関数
+	 * @param boolean $isArray 配列で返すフラグ
+	 * @return array|DataTableForPHP フィルタリング後の配列 or DataTableForPHPオブジェクト
+	 * @throws Exception
+	 * @see [.NET] DataTable.select(whereFunc)
+	 */
 	public function filter($whereFunc, $isArray = FALSE)
 	{
+		$rows = array_filter($this->_rows, $whereFunc);
+		// 配列で返さない場合(通常)
+		if ($isArray === FALSE) {
+			$ret = $this->cloneDataTable();
+			if (count($rows) > 0) {
+				$ret->setDBData($rows);
+			}
+		}
+		else {
+			$ret = $rows;
+		}
+
+		return $ret;
 	}
 
-	// TODO
-	public function sort($orders, $isArray = FALSE)
+	/**
+	 * ソート
+	 *
+	 * @param array $sorts ソート順、ソート方法配列
+	 * @param string $isArray 配列で返すかフラグ
+	 * @return array|DataTableForPHP ソート後の配列 or DataTableForPHPオブジェクト
+	 * @throws Exception
+	 * @see [.NET] DataTable.select("", sorts)
+	 */
+	public function sort(array $sorts, $isArray = FALSE)
 	{
+		$orders = array();
+		$flags = array();
+		$datas = array();
+		foreach ($sorts as $key => $sort) {
+			// カラム名が存在しない場合
+			if ($this->containsColumn($key) === FALSE) {
+				$message = sprintf(self::$errorMsgs['column_not_exists'], $key);
+				throw new Exception($message);
+			}
+			// カラム単位でデータを取得
+			$datas[] = $this->projection($key, TRUE);
+
+			// NULLの場合
+			if ($sort === NULL) {
+				$orders[] = SORT_ASC;
+				$flags[] = SORT_REGULAR;
+			}
+			// 昇順 or 降順 指定の場合(並び順のみ指定)
+			else if ($sort === SORT_ASC || $sort === SORT_DESC) {
+				$orders[] = $sort;
+				$flags[] = SORT_REGULAR;
+			}
+			// 完全指定の場合
+			else if (is_array($sort) === TRUE) {
+				if (array_key_exists('order', $sort) === TRUE) {
+					$orders[] = $sort['order'];
+				}
+				else {
+					$orders[] = SORT_ASC;
+				}
+				if (array_key_exists('flags', $sort) === TRUE) {
+					$flags[] = $sort['flags'];
+				}
+				else {
+					$flags[] = SORT_REGULAR;
+				}
+			}
+		}
+
+		$rows = $this->_rows;
+		if (count($datas) > 0) {
+			$evals = array();
+			foreach ($datas as $index => $data) {
+				$evals[] = sprintf('$datas[%d], $orders[%d], $flags[%d]', $index, $index, $index);
+			}
+			$eval  = 'array_multisort(' . implode(', ', $evals) . ', $rows);';
+			// echo $eval;
+			eval($eval);
+		}
+
+		// 配列で返さない場合(通常)
+		if ($isArray === FALSE) {
+			$ret = $this->cloneDataTable();
+			if (count($rows) > 0) {
+				$ret->setDBData($rows);
+			}
+		}
+		else {
+			$ret = $rows;
+		}
+
+		return $ret;
 	}
 
-	// TODO
-	public function select($whereFunc, $orders, $isArray = FALSE)
+	/**
+	 * フィルタリング および ソートを行う
+	 *
+	 * @param function $whereFunc 抽出関数
+	 * @param array $sorts ソート順、ソート方法配列
+	 * @param boolean $isArray 配列で返すかフラグ
+	 * @return array|DataTableForPHP ソート後の配列 or DataTableForPHPオブジェクト
+	 * @throws Exception
+	 * @see [.NET] DataTable.select(whereFunc, sorts)
+	 */
+	public function select($whereFunc, $sorts = NULL, $isArray = FALSE)
 	{
+		// フィルタリング
+		$rows = array_filter($this->_rows, $whereFunc);
+
+		// ソート指定あり
+		if (is_array($sorts) === TRUE) {
+			$ret = $this->cloneDataTable();
+			if (count($rows) > 0) {
+				$ret->setDBData($rows);
+			}
+			// ソート
+			$ret = $ret->sort($sorts);
+		}
+
+		// 配列で返す場合
+		if ($isArray === FALSE) {
+			$ret = $ret->_rows;
+		}
+		return $ret;
 	}
 
 	// TODO
 	public function watchTable($return = FALSE)
+	{
+	}
+
+	// TODO
+	public function getCsv($return = FALSE, $delimiter = ',', $lineFeed = "\r\n")
 	{
 	}
 }
@@ -693,29 +890,12 @@ class_alias('DataTableForPHP', 'DTP');
 // DataTableも使えるように別名定義
 class_alias('DataTableForPHP', 'DataTable');
 
-$dtp = new DataTableForPHP();
+// ----------------------------------------------------------------------------
 
-$datas = array(
-	array(
-		'a' => 1,
-		'b' => 2,
-		'c' => 3,
-	),
-	array(
-		'a' => 10,
-		'b' => 20,
-		'c' => 30,
-	),
-	array(
-		'a' => 100,
-		'b' => 200,
-		'c' => 300,
-	),
-);
-pre_var_dump(DataTableForPHP::getStrictMode());
-$dtp->setDBData($datas);
-$dtp->changeColumn('z', 'd');
-pre_var_dump($dtp);
+
+
+
+// ----------------------------------------------------------------------------
 
 /**
  * var_dump() を整形して表示する
