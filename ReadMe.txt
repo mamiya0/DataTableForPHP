@@ -1,5 +1,5 @@
 DataTableForPHP は、
-PHP で .NET Framework の DataTable っぽくデータを扱うためのライブラリです。
+PHP で DBから取得したデータを .NET Framework の DataTable っぽく扱うためのライブラリです。
 
 doxygen で作成したドキュメントが
 ./html/index.html にあります。
