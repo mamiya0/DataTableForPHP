@@ -153,12 +153,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <tr class="separator:a27a1bfd30036c815f7ec2f1d156d6217"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfef0429b0f4b63a62f7cdec5ba52c69"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#adfef0429b0f4b63a62f7cdec5ba52c69">select</a> ($whereFunc, $sorts=NULL, $isArray=FALSE)</td></tr>
 <tr class="separator:adfef0429b0f4b63a62f7cdec5ba52c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4611a30563d6e5a4520ff983da188cca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4611a30563d6e5a4520ff983da188cca"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>watchTable</b> ($return=FALSE)</td></tr>
-<tr class="separator:a4611a30563d6e5a4520ff983da188cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d5ff43c54d1913ff1d5960c6692d929"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d5ff43c54d1913ff1d5960c6692d929"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>getCsv</b> ($return=FALSE, $delimiter= ',', $lineFeed=&quot;\r\n&quot;)</td></tr>
-<tr class="separator:a3d5ff43c54d1913ff1d5960c6692d929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a869944f2c312d4301437a50adfea4623"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a869944f2c312d4301437a50adfea4623">watchTable</a> ($sortColumn=FALSE, $return=FALSE)</td></tr>
+<tr class="separator:a869944f2c312d4301437a50adfea4623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50906441f3263b7911152b22ce0300da"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a50906441f3263b7911152b22ce0300da">compareFormat</a> ($sortColumn=TRUE, $return=FALSE, $delimiter= ',', $lineFeed=&quot;\r\n&quot;)</td></tr>
+<tr class="separator:a50906441f3263b7911152b22ce0300da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 静的公開メンバ関数</h2></td></tr>
@@ -354,6 +352,56 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
  　完全な複製が欲しい場合は、PHP の clone を使うこと</p>
 <dl class="section return"><dt>戻り値</dt><dd>DataTableForPHPオブジェクト </dd></dl>
 <dl class="section see"><dt>参照</dt><dd>[.NET] DataTable.Clone() </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a50906441f3263b7911152b22ce0300da"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">compareFormat </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$sortColumn</em> = <code>TRUE</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$return</em> = <code>FALSE</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$delimiter</em> = <code>','</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lineFeed</em> = <code>&quot;\r\n&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>比較用書式を取得する</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">boolean</td><td class="paramname">$sortColumn</td><td>カラムのソートを行うか否か </td></tr>
+    <tr><td class="paramtype">boolean</td><td class="paramname">$return</td><td>変数として返すか出力するか </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$delimiter</td><td>区切り文字 </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$lineFeed</td><td>改行コード </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>NULL|string $returnに依存する (TRUE：string, FALSE：NULL) </dd></dl>
+<dl class="section see"><dt>参照</dt><dd>original </dd></dl>
 
 </div>
 </div>
@@ -1224,13 +1272,49 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 
 </div>
 </div>
+<a class="anchor" id="a869944f2c312d4301437a50adfea4623"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">watchTable </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$sortColumn</em> = <code>FALSE</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$return</em> = <code>FALSE</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>データテーブルの中身を見る</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">boolean</td><td class="paramname">$sortColumn</td><td>カラムのソートを行うか否か </td></tr>
+    <tr><td class="paramtype">boolean</td><td class="paramname">$return</td><td>変数として返すか出力するか </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>NULL|string $returnに依存する (TRUE：string, FALSE：NULL) </dd></dl>
+<dl class="section see"><dt>参照</dt><dd>original </dd></dl>
+
+</div>
+</div>
 <hr/>このクラス詳解は次のファイルから抽出されました:<ul>
 <li>DataTableForPHP.php</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-2015年11月09日(月) 21時06分15秒作成 - DataTableForPHP / 構成:  &#160;<a href="http://www.doxygen.org/index.html">
+2015年11月10日(火) 22時37分10秒作成 - DataTableForPHP / 構成:  &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

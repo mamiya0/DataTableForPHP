@@ -874,14 +874,188 @@ class DataTableForPHP {
 		return $ret;
 	}
 
-	// TODO
-	public function watchTable($return = FALSE)
+	/**
+	 * データテーブルの中身を見る
+	 *
+	 * @param boolean $sortColumn カラムのソートを行うか否か
+	 * @param boolean $return 変数として返すか出力するか
+	 * @return NULL|string $returnに依存する (TRUE：string, FALSE：NULL)
+	 * @see original
+	 */
+	public function watchTable($sortColumn = FALSE, $return = FALSE)
 	{
+		$rows = $this->_rows;
+		$columns = $this->_columns;
+		$columnCount = count($columns);
+
+		// カラムのソートを行う場合
+		if ($sortColumn === TRUE) {
+			foreach ($rows as $key => $row) {
+				ksort($rows[$key]);
+			}
+			sort($columns);
+		}
+
+		$html = <<< _HTML_
+<style type="text/css">
+.datatableforphp {
+	font-size: 13px !important;
+}
+.datatableforphp dd,
+.datatableforphp dt {
+	line-height: 110% !important;
+}
+.datatableforphp table {
+	font-size: 13px !important;
+	border-top: 1px solid #000000 !important;
+	border-left: 1px solid #000000 !important;
+	border-collapse: collapse !important;
+}
+.datatableforphp caption {
+	font-weight: bold !important;
+}
+.datatableforphp th {
+	background: #87E7AD !important;
+	border-right: 1px solid #000000 !important;
+	border-bottom: 1px solid #000000 !important;
+	padding: 2px !important !important;
+}
+.datatableforphp td {
+	border-right: 1px solid #000000 !important;
+	border-bottom: 1px solid #000000 !important;
+	padding: 2px !important;
+}
+.datatableforphp .null_value {
+	color: #0582FF !important;
+}
+.datatableforphp .number_value {
+	text-align: right !important;
+}
+.datatableforphp .warning_row {
+	background: #FFD1D1 !important;
+}
+.datatableforphp .warning_message {
+	color: #DD2332 !important;
+	font-size: 13px !important;
+}
+</style>
+_HTML_;
+
+		$tableName = $this->_tableName;
+		if ($tableName === NULL) {
+			$tableName = 'NoName';
+		}
+
+		$th = '';
+		foreach ($columns as $column) {
+			$th .= "<th>{$column}</th>" . PHP_EOL;
+		}
+
+		$debugs = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1);
+		$debugs = $debugs[0];
+
+		$html .= '<div class="datatableforphp">' . PHP_EOL;
+		$html .= '<dl>' . PHP_EOL;
+		$html .= '<dt><b>DataTableForPHP->watchTable() がコールされました！</b></dt>' . PHP_EOL;
+		$html .= "<dt>file</dt><dd>{$debugs['file']}</dd>" . PHP_EOL;
+		$html .= "<dt>line</dt><dd>{$debugs['line']}</dd>" . PHP_EOL;
+		$html .= "<dt>row count</dt><dd>{$this->countRow()}</dd>" . PHP_EOL;
+		$html .= "<dt>column count</dt><dd>{$this->countColumn()}</dd>" . PHP_EOL;
+		$html .= '</dl>' . PHP_EOL;
+		$html .= '<table>' . PHP_EOL;
+		$html .= "<caption>データテーブル名：{$tableName}</caption>" . PHP_EOL;
+		$html .= "<thead><tr>{$th}</tr><thead>" . PHP_EOL;
+		$html .= '<tbody>' . PHP_EOL;
+
+		$isWarning = FALSE;
+		foreach ($rows as $row) {
+			$classNameTr = '';
+			$keys = array_keys($row);
+			// カラム構成チェック：正常
+			if ($columnCount == count($row) &&
+				count(array_diff($columns, $keys)) == 0 &&
+				count(array_diff($keys, $columns)) == 0) {
+				// 何もしない
+			}
+			// カラム構成チェック：異常
+			else {
+				$classNameTr = ' warning_row ';
+				$isWarning = TRUE;
+			}
+			$html .= "<tr class='{$classNameTr}'>" . PHP_EOL;
+			foreach ($row as $column) {
+				$classNameTd = '';
+				if ($column === NULL) {
+					$value = '(NULL)';
+					$classNameTd .= ' null_value ';
+				}
+				else {
+					$value = var_export($column, TRUE);
+				}
+				if (mb_strpos($value, "'") !== 0) {
+					$classNameTd .= ' number_value ';
+				}
+				$html .= "<td class='{$classNameTd}'>{$value}</td>" . PHP_EOL;
+			}
+			$html .= '</tr>' . PHP_EOL;
+		}
+
+		$html .= '</tbody>' . PHP_EOL;
+		$html .= '</table>' . PHP_EOL;
+
+		if ($isWarning === TRUE) {
+			$html .= '<p class="warning_message">警告：レコードのカラム構成に問題があります！</p>';
+		}
+		$html .= '</div>';
+
+		// 変数として返す場合
+		if ($return === TRUE) {
+			return $html;
+		}
+		// 変数として返さない場合
+		else {
+			// 出力
+			echo $html;
+		}
 	}
 
-	// TODO
-	public function getCsv($return = FALSE, $delimiter = ',', $lineFeed = "\r\n")
+	/**
+	 * 比較用書式を取得する
+	 *
+	 * @param boolean $sortColumn カラムのソートを行うか否か
+	 * @param boolean $return 変数として返すか出力するか
+	 * @param string $delimiter 区切り文字
+	 * @param string $lineFeed 改行コード
+	 * @return NULL|string $returnに依存する (TRUE：string, FALSE：NULL)
+	 * @see original
+	 */
+	public function compareFormat($sortColumn = TRUE, $return = FALSE, $delimiter = ',', $lineFeed = "\r\n")
 	{
+		$rows = $this->_rows;
+		$columns = $this->_columns;
+
+		// カラムのソートを行う場合
+		if ($sortColumn === TRUE) {
+			foreach ($rows as $key => $row) {
+				ksort($rows[$key]);
+			}
+			sort($columns);
+		}
+
+		$output = implode($delimiter, $columns) . $lineFeed;
+		foreach ($rows as $row) {
+			$output .= implode($delimiter, $row) . $lineFeed;
+		}
+
+		// 変数として返す場合
+		if ($return === TRUE) {
+			return $output;
+		}
+		// 変数として返さない場合
+		else {
+			// 出力
+			echo $output;
+		}
 	}
 }
 
@@ -889,24 +1063,3 @@ class DataTableForPHP {
 class_alias('DataTableForPHP', 'DTP');
 // DataTableも使えるように別名定義
 class_alias('DataTableForPHP', 'DataTable');
-
-// ----------------------------------------------------------------------------
-
-
-
-
-// ----------------------------------------------------------------------------
-
-/**
- * var_dump() を整形して表示する
- */
-function pre_var_dump()
-{
-	$args = func_get_args();
-	if (func_num_args() == 1) {
-		$args = reset($args);
-	}
-	echo '<pre style="font-size:12px;">';
-	var_dump($args);
-	echo '</pre>';
-}
