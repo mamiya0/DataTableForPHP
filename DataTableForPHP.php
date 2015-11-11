@@ -32,7 +32,7 @@ class DataTableForPHP {
 	 *
 	 * @var boolean
 	 */
-	private static $isStrictMode = FALSE;
+	private static $isStrictMode = TRUE;
 
 	/**
 	 * エラーメッセージ配列
@@ -423,11 +423,8 @@ class DataTableForPHP {
 		// 厳格モードの場合
 		if (self::$isStrictMode === TRUE) {
 			$columns = array_keys($row);
-			$retA = array_diff($this->_columns, $columns);
-			$retB = array_diff($columns, $this->_columns);
 			// カラム構成が正しい場合
-			if (count($this->_columns) == count($columns) &&
-				count($retA) == 0 && count($retB) == 0) {
+			if ($this->_columns == $columns) {
 				$ret = TRUE;
 			}
 			// 誤りがある場合
@@ -976,9 +973,7 @@ _HTML_;
 			$classNameTr = '';
 			$keys = array_keys($row);
 			// カラム構成チェック：正常
-			if ($columnCount == count($row) &&
-				count(array_diff($columns, $keys)) == 0 &&
-				count(array_diff($keys, $columns)) == 0) {
+			if ($columns == $keys) {
 				// 何もしない
 			}
 			// カラム構成チェック：異常
