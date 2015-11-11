@@ -45,13 +45,13 @@ class DataTableForPHP {
 		'column_not_exists_delete'			=> 'カラム「%s」は存在しません。削除することができません。',
 		'column_exists_change'				=> 'カラム「%s」は既に存在します。変更することができません。',
 		'column_not_exists_change'			=> 'カラム「%s」は存在しません。変更することができません。',
-		'column_index_not_exists'			=> '%d番目のカラムは存在しません。取得することができません。',
-		'column_index_not_exists_delete'	=> '%d番目のカラムは存在しません。削除することができません。',
+		'column_index_not_exists'			=> '%s番目のカラムは存在しません。取得することができません。',
+		'column_index_not_exists_delete'	=> '%s番目のカラムは存在しません。削除することができません。',
 		'column_configuration_invalid'		=> 'レコードのカラム構成に問題があります。',
-		'row_not_insert'					=> 'レコードの挿入位置(%d)が無効です。',
-		'row_not_exists'					=> '%d番目のレコードは存在しません。取得することができません。',
-		'row_not_exists_update'				=> '%d番目のレコードは存在しません。更新することができません。',
-		'row_not_exists_delete'				=> '%d番目のレコードは存在しません。削除することができません。',
+		'row_not_insert'					=> 'レコードの挿入位置(%s)が無効です。',
+		'row_not_exists'					=> '%s番目のレコードは存在しません。取得することができません。',
+		'row_not_exists_update'				=> '%s番目のレコードは存在しません。更新することができません。',
+		'row_not_exists_delete'				=> '%s番目のレコードは存在しません。削除することができません。',
 	);
 
 	/**
@@ -76,7 +76,7 @@ class DataTableForPHP {
 	 */
 	public function getTableName()
 	{
-		return $this->$_tableName;
+		return $this->_tableName;
 	}
 
 	/**
@@ -153,9 +153,20 @@ class DataTableForPHP {
 	 */
 	public function dispose()
 	{
-		unset($this->_tableName);
-		unset($this->_columns);
-		unset($this->_rows);
+		$this->_tableName = NULL;
+		$this->_columns = array();
+		$this->_rows = array();
+	}
+
+	/**
+	 * 厳格モードか否かを取得する
+	 *
+	 * @return boolean 厳格モードか否か
+	 * @see original
+	 */
+	public static function getStrictMode()
+	{
+		return self::$isStrictMode;
 	}
 
 	/**
@@ -170,18 +181,7 @@ class DataTableForPHP {
 		self::$isStrictMode = (boolean)$mode;
 	}
 
-	/**
-	 * 厳格モードか否かを取得する
-	 *
-	 * @return boolean 厳格モードか否か
-	 * @see original
-	 */
-	public static function getStrictMode()
-	{
-		return self::$isStrictMode;
-	}
-
-	// カラム関連
+	// カラム系
 
 	/**
 	 * カラムを取得する
@@ -200,7 +200,7 @@ class DataTableForPHP {
 	 * @param int $index 指定位置
 	 * @return string カラム名
 	 * @throws Exception
-	 * @see [.NET] DataTable.Columns(index)
+	 * @see [.NET] DataTable.Columns[index]
 	 */
 	public function getColumn($index)
 	{
@@ -221,7 +221,7 @@ class DataTableForPHP {
 	 */
 	public function containsColumn($column)
 	{
-		return in_array($column, $this->_columns);
+		return in_array($column, $this->_columns, TRUE);
 	}
 
 	/**
@@ -270,19 +270,19 @@ class DataTableForPHP {
 	 */
 	private function _addColumn($column)
 	{
-		// カラム配列に存在しない場合
-		if (in_array($column, $this->_columns) === FALSE) {
-			$this->_columns[] = $column;
-		}
-		// 存在する場合
-		else {
+		// カラム配列に存在する場合
+		if (in_array($column, $this->_columns, TRUE) === TRUE) {
 			$message = sprintf(self::$errorMsgs['column_exists_add'], $column);
 			throw new Exception($message);
 		}
+		// 存在しない場合
+		else {
+			$this->_columns[] = $column;
+		}
 
 		// レコードにカラムを追加
-		foreach ($this->_rows as &$row) {
-			$row[$column] = NULL;
+		foreach ($this->_rows as $key => $row) {
+			$this->_rows[$key][$column] = NULL;
 		}
 	}
 
@@ -293,7 +293,7 @@ class DataTableForPHP {
 	 * @param string $newColumnName 変更後のカラム名
 	 * @return void
 	 * @throws Exception
-	 * @see [.NET] DataTable.Columns(index).ColumnName
+	 * @see [.NET] DataTable.Columns[index].ColumnName
 	 */
 	public function changeColumn($oldColumnName, $newColumnName)
 	{
@@ -346,7 +346,7 @@ class DataTableForPHP {
 	 * @param string $column 削除するカラム名
 	 * @return void
 	 * @throws Exception
-	 * @see [.NET] DataTable.Columns().Remove(column)
+	 * @see [.NET] DataTable.Columns[index].Remove()
 	 */
 	public function removeColumn($column)
 	{
@@ -451,7 +451,7 @@ class DataTableForPHP {
 		return $ret;
 	}
 
-	// レコード関連
+	// レコード系
 
 	/**
 	 * レコード配列を取得する
@@ -470,7 +470,7 @@ class DataTableForPHP {
 	 * @param int $index 指定位置
 	 * @return array レコード
 	 * @throws Exception
-	 * @see [.NET] DataTable.Rows(index)
+	 * @see [.NET] DataTable.Rows[index]
 	 */
 	public function getRow($index)
 	{
@@ -552,7 +552,7 @@ class DataTableForPHP {
 	 * @param array $row 更新するレコード
 	 * @param int $index 指定位置(>=0)
 	 * @return void
-	 * @see [.NET] DataTable.Rows(index)
+	 * @see [.NET] DataTable.Rows[index]
 	 */
 	public function setRow(array $row, $index)
 	{
@@ -575,7 +575,7 @@ class DataTableForPHP {
 	 * @param boolean $isRenumbered 添字の振り直すか否か
 	 * @return void
 	 * @throws Exception
-	 * @see [.NET] DataTable.Rows(index).Remove()
+	 * @see [.NET] DataTable.Rows[index].Remove()
 	 */
 	public function removeRow($index, $isRenumbered = TRUE)
 	{
@@ -604,7 +604,7 @@ class DataTableForPHP {
 		$this->_rows = array();
 	}
 
-	// データ関連
+	// データ系
 
 	/**
 	 * 値を取得する
@@ -613,7 +613,7 @@ class DataTableForPHP {
 	 * @param string $columnName カラム名
 	 * @return variant 値
 	 * @throws Exception
-	 * @see [.NET] DataTable.Rows(rowIndex)[columnName]
+	 * @see [.NET] DataTable.Rows[rowIndex][columnName]
 	 */
 	public function getData($rowIndex, $columnName)
 	{
@@ -638,7 +638,7 @@ class DataTableForPHP {
 	 * @param int $columnIndex カラムの指定位置
 	 * @return variant 値
 	 * @throws Exception
-	 * @see [.NET] DataTable.Rows(rowIndex)[columnIndex]
+	 * @see [.NET] DataTable.Rows[rowIndex][columnIndex]
 	 */
 	public function getDataForIndex($rowIndex, $columnIndex)
 	{
@@ -656,7 +656,7 @@ class DataTableForPHP {
 	 * @param variant $value 値
 	 * @return void
 	 * @throws Exception
-	 * @see [.NET] DataTable.Rows(rowIndex)[columnIndex]
+	 * @see [.NET] DataTable.Rows[rowIndex][columnIndex]
 	 */
 	public function setData($rowIndex, $columnName, $value)
 	{
@@ -682,7 +682,7 @@ class DataTableForPHP {
 	 * @param variant $value 値
 	 * @return void
 	 * @throws Exception
-	 * @see [.NET] DataTable.Rows(rowIndex)[columnIndex]
+	 * @see [.NET] DataTable.Rows[rowIndex][columnIndex]
 	 */
 	public function setDataForIndex($rowIndex, $columnIndex, $value)
 	{
@@ -691,6 +691,8 @@ class DataTableForPHP {
 		// 値を更新する
 		$this->setData($rowIndex, $columnName, $value);
 	}
+
+	// データ操作系
 
 	/**
 	 * 射影 - 特定のカラムを取得する
@@ -873,6 +875,8 @@ class DataTableForPHP {
 		}
 		return $ret;
 	}
+
+	// Util系
 
 	/**
 	 * データテーブルの中身を見る
