@@ -32,7 +32,7 @@ class DataTableForPHP {
 	 *
 	 * @var boolean
 	 */
-	private static $isStrictMode = TRUE;
+	private static $isStrictMode = FALSE;
 
 	/**
 	 * エラーメッセージ配列
