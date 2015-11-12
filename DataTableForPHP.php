@@ -4,6 +4,7 @@
  *
  * @author mamiya_shou
  * @version 1.0.0
+ * @caution PHP 5.3 以上
  */
 class DataTableForPHP {
 
@@ -146,16 +147,16 @@ class DataTableForPHP {
 
 	/**
 	 * リソースの破棄<br />
-	 * (破棄後、再使用可能)
+	 * (破棄後、使用不可)
 	 *
 	 * @return void
 	 * @see [.NET] DataTable.Dispose()
 	 */
 	public function dispose()
 	{
-		$this->_tableName = NULL;
-		$this->_columns = array();
-		$this->_rows = array();
+		$this->_tableName	= NULL;
+		$this->_columns		= array();
+		$this->_rows		= array();
 	}
 
 	/**
@@ -637,7 +638,7 @@ class DataTableForPHP {
 	 * @throws Exception
 	 * @see [.NET] DataTable.Rows[rowIndex][columnIndex]
 	 */
-	public function getDataForIndex($rowIndex, $columnIndex)
+	public function getDataForIdx($rowIndex, $columnIndex)
 	{
 		// カラム名を取得する
 		$columnName = $this->getColumn($columnIndex);
@@ -681,7 +682,7 @@ class DataTableForPHP {
 	 * @throws Exception
 	 * @see [.NET] DataTable.Rows[rowIndex][columnIndex]
 	 */
-	public function setDataForIndex($rowIndex, $columnIndex, $value)
+	public function setDataForIdx($rowIndex, $columnIndex, $value)
 	{
 		// カラム名を取得する
 		$columnName = $this->getColumn($columnIndex);
@@ -752,6 +753,7 @@ class DataTableForPHP {
 	public function filter($whereFunc, $isArray = FALSE)
 	{
 		$rows = array_filter($this->_rows, $whereFunc);
+		$rows = array_values($rows);
 		// 配列で返さない場合(通常)
 		if ($isArray === FALSE) {
 			$ret = $this->cloneDataTable();

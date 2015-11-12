@@ -139,12 +139,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <tr class="separator:a55739e018307cd6c3439fb3d01064460"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f043069d4cc0eccdab1d5e9e2764cfd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a1f043069d4cc0eccdab1d5e9e2764cfd">getData</a> ($rowIndex, $columnName)</td></tr>
 <tr class="separator:a1f043069d4cc0eccdab1d5e9e2764cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a076d4573da2fd69433547f310416c994"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a076d4573da2fd69433547f310416c994">getDataForIndex</a> ($rowIndex, $columnIndex)</td></tr>
-<tr class="separator:a076d4573da2fd69433547f310416c994"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57f60fa57ed486e0a5cb3731a894da44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a57f60fa57ed486e0a5cb3731a894da44">getDataForIdx</a> ($rowIndex, $columnIndex)</td></tr>
+<tr class="separator:a57f60fa57ed486e0a5cb3731a894da44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5a234fb884d196e172e90c165eb22d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#ab5a234fb884d196e172e90c165eb22d4">setData</a> ($rowIndex, $columnName, $value)</td></tr>
 <tr class="separator:ab5a234fb884d196e172e90c165eb22d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac40c56fa1701d078356664f488dfe44d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#ac40c56fa1701d078356664f488dfe44d">setDataForIndex</a> ($rowIndex, $columnIndex, $value)</td></tr>
-<tr class="separator:ac40c56fa1701d078356664f488dfe44d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7844a26b8835bdb4a3e7bed81f042741"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a7844a26b8835bdb4a3e7bed81f042741">setDataForIdx</a> ($rowIndex, $columnIndex, $value)</td></tr>
+<tr class="separator:a7844a26b8835bdb4a3e7bed81f042741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a130a976085976f06af70d00846d13f0c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#a130a976085976f06af70d00846d13f0c">projection</a> ($columns, $isArray=FALSE)</td></tr>
 <tr class="separator:a130a976085976f06af70d00846d13f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0c56d7c5c79142dc7debc6b787b053c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_table_for_p_h_p.html#aa0c56d7c5c79142dc7debc6b787b053c">filter</a> ($whereFunc, $isArray=FALSE)</td></tr>
@@ -168,7 +168,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
 <div class="textblock"><p><a class="el" href="class_data_table_for_p_h_p.html">DataTableForPHP</a></p>
 <dl class="section author"><dt>著者</dt><dd>mamiya_shou </dd></dl>
-<dl class="section version"><dt>バージョン</dt><dd>1.0.0 </dd></dl>
+<dl class="section version"><dt>バージョン</dt><dd>1.0.0  PHP 5.3 以上 </dd></dl>
 </div><h2 class="groupheader">構築子と解体子</h2>
 <a class="anchor" id="adf15a4c00ffdf16ac4853ba33e3511f5"></a>
 <div class="memitem">
@@ -478,7 +478,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
       </table>
 </div><div class="memdoc">
 <p>リソースの破棄<br />
- (破棄後、再使用可能)</p>
+ (破棄後、使用不可)</p>
 <dl class="section return"><dt>戻り値</dt><dd>void </dd></dl>
 <dl class="section see"><dt>参照</dt><dd>[.NET] DataTable.Dispose() </dd></dl>
 
@@ -635,12 +635,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 
 </div>
 </div>
-<a class="anchor" id="a076d4573da2fd69433547f310416c994"></a>
+<a class="anchor" id="a57f60fa57ed486e0a5cb3731a894da44"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">getDataForIndex </td>
+          <td class="memname">getDataForIdx </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$rowIndex</em>, </td>
@@ -1056,12 +1056,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 
 </div>
 </div>
-<a class="anchor" id="ac40c56fa1701d078356664f488dfe44d"></a>
+<a class="anchor" id="a7844a26b8835bdb4a3e7bed81f042741"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">setDataForIndex </td>
+          <td class="memname">setDataForIdx </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$rowIndex</em>, </td>
@@ -1314,7 +1314,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-2015年11月11日(水) 22時07分27秒作成 - DataTableForPHP / 構成:  &#160;<a href="http://www.doxygen.org/index.html">
+2015年11月12日(木) 21時33分17秒作成 - DataTableForPHP / 構成:  &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
